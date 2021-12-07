@@ -1,0 +1,107 @@
+#define trig 13
+#define echo 12
+
+#include <LiquidCrystal.h>
+
+// Inisiasi pin pada LCD
+LiquidCrystal lcd(7, 6, 5, 4, 3, 2);
+int redled = 8;
+int yellowled = 9;
+int greenled = 10;
+int speaker = 11;
+
+void setup() {
+  lcd.begin(16, 2);
+  pinMode(trig, OUTPUT);
+  pinMode(echo, INPUT);
+  pinMode(redled, OUTPUT);
+  pinMode(yellowled, OUTPUT);
+  pinMode(greenled, OUTPUT);
+  pinMode (speaker, OUTPUT);
+  lcd.setCursor(3,0);
+  lcd.print("WATER LEVEL");
+  lcd.setCursor(3,1);
+  lcd.print("MONITORING");
+  delay(1500);
+  lcd.clear();
+  lcd.setCursor(2,0);
+  lcd.print("Pasang Surut");
+  lcd.setCursor(4,1);
+  lcd.print("Air Laut");
+  delay(1500);
+  lcd.clear();
+  
+}
+
+void loop() {
+  
+long duration, distance;
+digitalWrite(trig, LOW); 
+delayMicroseconds(2); 
+digitalWrite(trig, HIGH);
+delayMicroseconds(10); 
+digitalWrite(trig, LOW);
+duration = pulseIn(echo, HIGH);
+distance = (((duration/2) /29.1)+2); // konversi dalam satuan cm
+
+if (distance  <100)
+{
+  lcd.clear();
+  delay(500);
+  lcd.setCursor(5,1);
+  lcd.print("BAHAYA");
+  lcd.setCursor(4,0);
+  lcd.print("Jarak=");
+  lcd.setCursor(10,0);
+  lcd.print(distance);
+  lcd.setCursor(13,0);
+  lcd.print("cm");
+  if (distance <100);
+  digitalWrite(redled, HIGH);
+  digitalWrite(greenled, LOW);
+  digitalWrite(yellowled, LOW);
+  digitalWrite(speaker, HIGH);
+  delay(500);
+}
+  
+else if (100<= distance and distance <=200)
+{
+  lcd.clear();
+  delay(500);
+  lcd.setCursor(5,1);
+  lcd.print("WASPADA");
+  lcd.setCursor(4,0);
+  lcd.print("Jarak=");
+  lcd.setCursor(10,0);
+  lcd.print(distance);
+  lcd.setCursor(13,0);
+  lcd.print("cm");
+  digitalWrite(redled, LOW);
+  digitalWrite(greenled, LOW);
+  digitalWrite(yellowled, HIGH);
+  digitalWrite(speaker, LOW);
+  delay(500);
+}
+
+
+else
+{
+  lcd.clear();
+  delay(500);
+  lcd.setCursor(6,1);
+  lcd.print("AMAN");
+  lcd.setCursor(4,0);
+  lcd.print("Jarak=");
+  lcd.setCursor(10,0);
+  lcd.print(distance);
+  lcd.setCursor(13,0);
+  lcd.print("cm");
+  digitalWrite(redled, LOW);
+  digitalWrite(greenled, HIGH);
+  digitalWrite(yellowled, LOW);
+  digitalWrite(speaker, LOW);
+  delay(500);
+ 
+  
+}
+}
